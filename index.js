@@ -8,50 +8,42 @@ app.use(express.json());
 
 app.set("view engine", "ejs");
 
-
-//storage
+//diskStorage
 const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
 
-    destination: (req, file, cb) => {
-        cb(null, "uploads/")
-    },
-
-    filename: (req, file, cb) => {
-        cb(null, file.originalname)
-    },
-})
-const upload = multer({storage})
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
 //;
-
-
 
 //dest
 // const upload = multer({dest: "uploads/"})
 //;
 
-
 //um arquivo
-// app.post("/", upload.single("image"),(req, res) => {
+app.post("/", upload.single("image"), (req, res) => {
+  console.log(req.body, req.file);
+  res.send("ok");
+});
+//;
+
+//varios arquivos
+// app.post("/", upload.array("images", 3),(req, res) => {
 //     console.log(req.body, req.file)
 //     res.send("ok");
 // });
 //;
 
-
-//varios arquivos
-app.post("/", upload.array("images", 3),(req, res) => {
-    console.log(req.body, req.file)
-    res.send("ok");
-});
-//;
-
-
 //get
 app.get("/", (req, res) => {
-    res.render("home");
-  });
+  res.render("home");
+});
 //;
-
 
 //server
 app.listen(5000, () => {
